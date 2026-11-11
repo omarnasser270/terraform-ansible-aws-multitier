@@ -1,0 +1,24 @@
+---
+- name: Base configuration for all servers
+  hosts: all
+  become: true
+  roles:
+    - common
+
+- name: Configure Memcached
+  hosts: memcached
+  become: true
+  roles:
+    - memcached
+
+- name: Configure MariaDB
+  hosts: mariadb
+  become: true
+  roles:
+    - mariadb
+
+- name: Configure RabbitMQ
+  hosts: rabbitmq
+  become: true
+  roles:
+    - rabbitmq

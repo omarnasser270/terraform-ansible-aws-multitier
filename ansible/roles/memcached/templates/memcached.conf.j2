@@ -1,0 +1,8 @@
+-d
+logfile /var/log/memcached.log
+-m {{ memcached_memory }}
+-p {{ memcached_port }}
+-u memcache
+-l {{ ansible_default_ipv4.address }}
+-c 1024
+-P /var/run/memcached/memcached.pid

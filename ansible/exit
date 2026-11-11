@@ -1,0 +1,397 @@
+> COMMUNITY.MYSQL.MYSQL_DB    (/usr/lib/python3/dist-packages/ansible_collections/community/mysql/plugins/modules/mysql_db.py)
+
+        Add or remove MySQL databases from a remote host.
+
+OPTIONS (= is mandatory):
+
+- ca_cert
+        The path to a Certificate Authority (CA) certificate. This option, if used, must specify the same certificate as
+        used by the server.
+        (Aliases: ssl_ca)[Default: (null)]
+        type: path
+
+- check_hostname
+        Whether to validate the server host name when an SSL connection is required.
+        Setting this to `false' disables hostname verification. Use with caution.
+        Requires pymysql >= 0.7.11.
+        This optoin has no effect on MySQLdb.
+        [Default: (null)]
+        type: bool
+        version_added: 1.1.0
+        version_added_collection: community.mysql
+
+- check_implicit_admin
+        Check if mysql allows login as root/nopassword before trying supplied credentials.
+        If success, passed `login_user'/`login_password' will be ignored.
+        [Default: False]
+        type: bool
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+- client_cert
+        The path to a client public key certificate.
+        (Aliases: ssl_cert)[Default: (null)]
+        type: path
+
+- client_key
+        The path to the client private key.
+        (Aliases: ssl_key)[Default: (null)]
+        type: path
+
+- collation
+        Collation mode (sorting). This only applies to new table/databases and does not update existing ones, this is a
+        limitation of MySQL.
+        [Default: ]
+        type: str
+
+- config_file
+        Specify a config file from which user and password are to be read.
+        [Default: ~/.my.cnf]
+        type: path
+
+- config_overrides_defaults
+        If `yes', connection parameters from `config_file' will override the default values of `login_host' and `login_port'
+        parameters.
+        Used when `stat' is `present' or `absent', ignored otherwise.
+        It needs Python 3.5+ as the default interpreter on a target host.
+        [Default: False]
+        type: bool
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+- connect_timeout
+        The connection timeout when connecting to the MySQL server.
+        [Default: 30]
+        type: int
+
+- dump_extra_args
+        Provide additional arguments for mysqldump. Used when `state=dump' only, ignored otherwise.
+        [Default: (null)]
+        type: str
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+- encoding
+        Encoding mode to use, examples include `utf8' or `latin1_swedish_ci', at creation of database, dump or importation
+        of sql script.
+        [Default: ]
+        type: str
+
+- force
+        Continue dump or import even if we get an SQL error.
+        Used only when `state' is `dump' or `import'.
+        [Default: False]
+        type: bool
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+- hex_blob
+        Dump binary columns using hexadecimal notation.
+        [Default: False]
+        type: bool
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+- ignore_tables
+        A list of table names that will be ignored in the dump of the form database_name.table_name.
+        [Default: []]
+        elements: str
+        type: list
+
+- login_host
+        Host running the database.
+        In some cases for local connections the `login_unix_socket=/path/to/mysqld/socket', that is usually
+        `/var/run/mysqld/mysqld.sock', needs to be used instead of `login_host=localhost'.
+        [Default: localhost]
+        type: str
+
+- login_password
+        The password used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- login_port
+        Port of the MySQL server. Requires `login_host' be defined as other than localhost if login_port is used.
+        [Default: 3306]
+        type: int
+
+- login_unix_socket
+        The path to a Unix domain socket for local connections.
+        [Default: (null)]
+        type: str
+
+- login_user
+        The username used to authenticate with.
+        [Default: (null)]
+        type: str
+
+- master_data
+        Option to dump a master replication server to produce a dump file that can be used to set up another server as a
+        slave of the master.
+        `0' to not include master data.
+        `1' to generate a 'CHANGE MASTER TO' statement required on the slave to start the replication process.
+        `2' to generate a commented 'CHANGE MASTER TO'.
+        Can be used when `state=dump'.
+        (Choices: 0, 1, 2)[Default: 0]
+        type: int
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+= name
+        Name of the database to add or remove.
+        `name=all' may only be provided if `state' is `dump' or `import'.
+        List of databases is provided with `state=dump', `state=present' and `state=absent'.
+        If `name=all' it works like --all-databases option for mysqldump (Added in 2.0).
+        (Aliases: db)
+        elements: str
+        type: list
+
+- quick
+        Option used for dumping large tables.
+        [Default: True]
+        type: bool
+
+- restrict_config_file
+        Read only passed `config_file'.
+        When `state' is `dump' or `import', by default the module passes `config_file' parameter using `--defaults-extra-
+        file' command-line argument to `mysql/mysqldump' utilities under the hood that read named option file in addition to
+        usual option files.
+        If this behavior is undesirable, use `yes' to read only named option file.
+        [Default: False]
+        type: bool
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+- single_transaction
+        Execute the dump in a single transaction.
+        [Default: False]
+        type: bool
+
+- skip_lock_tables
+        Skip locking tables for read. Used when `state=dump', ignored otherwise.
+        [Default: False]
+        type: bool
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+- state
+        The database state.
+        (Choices: absent, dump, import, present)[Default: present]
+        type: str
+
+- target
+        Location, on the remote host, of the dump file to read from or write to.
+        Uncompressed SQL files (`.sql') as well as bzip2 (`.bz2'), gzip (`.gz') and xz (Added in 2.0) compressed files are
+        supported.
+        [Default: (null)]
+        type: path
+
+- unsafe_login_password
+        If `no', the module will safely use a shell-escaped version of the `login_password' value.
+        It makes sense to use `yes' only if there are special symbols in the value and errors `Access denied' occur.
+        Used only when `state' is `import' or `dump' and `login_password' is passed, ignored otherwise.
+        [Default: False]
+        type: bool
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+- use_shell
+        Used to prevent `Broken pipe' errors when the imported `target' file is compressed.
+        If `yes', the module will internally execute commands via a shell.
+        Used when `state=import', ignored otherwise.
+        [Default: False]
+        type: bool
+        version_added: 0.1.0
+        version_added_collection: community.mysql
+
+
+NOTES:
+      * Supports `check_mode'.
+      * Requires the mysql and mysqldump binaries on the remote host.
+      * This module is *not idempotent* when `state' is `import', and will import the dump file each time if run more
+        than once.
+      * Requires the PyMySQL (Python 2.7 and Python 3.X) or MySQL-python (Python 2.X) package installed on the remote
+        host. The Python package may be installed with apt-get install python-pymysql (Ubuntu; see
+        [ansible.builtin.apt]) or yum install python2-PyMySQL (RHEL/CentOS/Fedora; see [ansible.builtin.yum]). You can
+        also use dnf install python2-PyMySQL for newer versions of Fedora; see [ansible.builtin.dnf].
+      * Be sure you have PyMySQL or MySQLdb library installed on the target machine for the Python interpreter Ansible
+        uses, for example, if it is Python 3, you must install the library for Python 3. You can also change the
+        interpreter. For more information, see
+        https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html.
+      * Both `login_password' and `login_user' are required when you are passing credentials. If none are present, the
+        module will attempt to read the credentials from `~/.my.cnf', and finally fall back to using the MySQL default
+        login of 'root' with no password.
+      * If there are problems with local connections, using `login_unix_socket=/path/to/mysqld/socket' instead of
+        `login_host=localhost' might help. As an example, the default MariaDB installation of version 10.4 and later
+        uses the unix_socket authentication plugin by default that without using
+        `login_unix_socket=/var/run/mysqld/mysqld.sock' (the default path) causes the error ``Host '127.0.0.1' is not
+        allowed to connect to this MariaDB server``.
+      * Alternatively, you can use the mysqlclient library instead of MySQL-python (MySQLdb) which supports both
+        Python 2.X and Python >=3.5. See https://pypi.org/project/mysqlclient/ how to install it.
+
+
+SEE ALSO:
+      * Module community.mysql.mysql_info
+           The official documentation on the community.mysql.mysql_info module.
+           https://docs.ansible.com/ansible/2.10/modules/community.mysql.mysql_info_module.html
+      * Module community.mysql.mysql_variables
+           The official documentation on the community.mysql.mysql_variables module.
+           https://docs.ansible.com/ansible/2.10/modules/community.mysql.mysql_variables_module.html
+      * Module community.mysql.mysql_user
+           The official documentation on the community.mysql.mysql_user module.
+           https://docs.ansible.com/ansible/2.10/modules/community.mysql.mysql_user_module.html
+      * Module community.mysql.mysql_replication
+           The official documentation on the community.mysql.mysql_replication module.
+           https://docs.ansible.com/ansible/2.10/modules/community.mysql.mysql_replication_module.html
+      * MySQL command-line client reference
+           Complete reference of the MySQL command-line client documentation.
+           https://dev.mysql.com/doc/refman/8.0/en/mysql.html
+      * mysqldump reference
+           Complete reference of the ``mysqldump`` client utility documentation.
+           https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html
+      * CREATE DATABASE reference
+           Complete reference of the CREATE DATABASE command documentation.
+           https://dev.mysql.com/doc/refman/8.0/en/create-database.html
+      * DROP DATABASE reference
+           Complete reference of the DROP DATABASE command documentation.
+           https://dev.mysql.com/doc/refman/8.0/en/drop-database.html
+
+
+REQUIREMENTS:  MySQLdb (Python 2.x), PyMySQL (Python 2.7 and Python 3.X), or, mysql (command line binary), mysqldump
+        (command line binary)
+
+AUTHOR: Ansible Core Team
+
+EXAMPLES:
+
+- name: Create a new database with name 'bobdata'
+  community.mysql.mysql_db:
+    name: bobdata
+    state: present
+
+- name: Create new databases with names 'foo' and 'bar'
+  community.mysql.mysql_db:
+    name:
+      - foo
+      - bar
+    state: present
+
+# Copy database dump file to remote host and restore it to database 'my_db'
+- name: Copy database dump file
+  copy:
+    src: dump.sql.bz2
+    dest: /tmp
+
+- name: Restore database
+  community.mysql.mysql_db:
+    name: my_db
+    state: import
+    target: /tmp/dump.sql.bz2
+
+- name: Restore database ignoring errors
+  community.mysql.mysql_db:
+    name: my_db
+    state: import
+    target: /tmp/dump.sql.bz2
+    force: yes
+
+- name: Dump multiple databases
+  community.mysql.mysql_db:
+    state: dump
+    name: db_1,db_2
+    target: /tmp/dump.sql
+
+- name: Dump multiple databases
+  community.mysql.mysql_db:
+    state: dump
+    name:
+      - db_1
+      - db_2
+    target: /tmp/dump.sql
+
+- name: Dump all databases to hostname.sql
+  community.mysql.mysql_db:
+    state: dump
+    name: all
+    target: /tmp/dump.sql
+
+- name: Dump all databases to hostname.sql including master data
+  community.mysql.mysql_db:
+    state: dump
+    name: all
+    target: /tmp/dump.sql
+    master_data: 1
+
+# Import of sql script with encoding option
+- name: >
+    Import dump.sql with specific latin1 encoding,
+    similar to mysql -u <username> --default-character-set=latin1 -p <password> < dump.sql
+  community.mysql.mysql_db:
+    state: import
+    name: all
+    encoding: latin1
+    target: /tmp/dump.sql
+
+# Dump of database with encoding option
+- name: >
+    Dump of Databse with specific latin1 encoding,
+    similar to mysqldump -u <username> --default-character-set=latin1 -p <password> <database>
+  community.mysql.mysql_db:
+    state: dump
+    name: db_1
+    encoding: latin1
+    target: /tmp/dump.sql
+
+- name: Delete database with name 'bobdata'
+  community.mysql.mysql_db:
+    name: bobdata
+    state: absent
+
+- name: Make sure there is neither a database with name 'foo', nor one with name 'bar'
+  community.mysql.mysql_db:
+    name:
+      - foo
+      - bar
+    state: absent
+
+# Dump database with argument not directly supported by this module
+# using dump_extra_args parameter
+- name: Dump databases without including triggers
+  community.mysql.mysql_db:
+    state: dump
+    name: foo
+    target: /tmp/dump.sql
+    dump_extra_args: --skip-triggers
+
+- name: Try to create database as root/nopassword first. If not allowed, pass the credentials
+  community.mysql.mysql_db:
+    check_implicit_admin: yes
+    login_user: bob
+    login_password: 123456
+    name: bobdata
+    state: present
+
+
+RETURN VALUES:
+- db
+        Database names in string format delimited by white space.
+
+        returned: always
+        sample: foo bar
+        type: str
+
+- db_list
+        List of database names.
+
+        returned: always
+        sample: foo, bar
+        type: list
+
+- executed_commands
+        List of commands which tried to run.
+
+        returned: if executed
+        sample: CREATE DATABASE acme
+        type: list
+        version_added: 0.1.0
+        version_added_collection: community.mysql

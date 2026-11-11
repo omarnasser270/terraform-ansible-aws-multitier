@@ -1,0 +1,45 @@
+---
+- name: Install RabbitMQ server
+  ansible.builtin.apt:
+    name: rabbitmq-server
+    state: present
+
+- name: Configure RabbitMQ to listen on the private IP
+  ansible.builtin.template:
+    src: rabbitmq.conf.j2
+    dest: /etc/rabbitmq/rabbitmq.conf
+    owner: root
+    group: rabbitmq
+    mode: '0644'
+  notify: Restart rabbitmq
+
+- name: Apply configuration changes now
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable and start RabbitMQ
+  ansible.builtin.service:
+    name: rabbitmq-server
+    state: started
+    enabled: true
+
+- name: Create the virtual host
+  community.rabbitmq.rabbitmq_vhost:
+    name: "{{ rabbitmq_vhost }}"
+    state: present
+
+- name: Create the application user with permissions
+  community.rabbitmq.rabbitmq_user:
+    user: "{{ rabbitmq_app_user }}"
+    password: "{{ vault_rabbitmq_password }}"
+    vhost: "{{ rabbitmq_vhost }}"
+    configure_priv: ".*"
+    read_priv: ".*"
+    write_priv: ".*"
+    state: present
+  no_log: true
+
+- name: Wait for RabbitMQ to listen on the private IP
+  ansible.builtin.wait_for:
+    host: "{{ ansible_default_ipv4.address }}"
+    port: 5672
+    timeout: 60
