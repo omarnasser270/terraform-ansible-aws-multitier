@@ -5,15 +5,15 @@
       - openjdk-17-jre-headless
       - nginx
     state: present
-
+    
 - name: Map backend hostnames to private IPs
   ansible.builtin.blockinfile:
     path: /etc/hosts
     marker: "# {mark} ANSIBLE MANAGED BACKEND HOSTS"
     block: |
-      {{ hostvars[groups['mariadb'][0]].ansible_default_ipv4.address }} db01
-      {{ hostvars[groups['memcached'][0]].ansible_default_ipv4.address }} mc01
-      {{ hostvars[groups['rabbitmq'][0]].ansible_default_ipv4.address }} rmq01
+      {{ hostvars[groups['mariadb'][0]].ansible_host }} db01
+      {{ hostvars[groups['memcached'][0]].ansible_host }} mc01
+      {{ hostvars[groups['rabbitmq'][0]].ansible_host }} rmq01
 
 - name: Create the tomcat group
   ansible.builtin.group:
