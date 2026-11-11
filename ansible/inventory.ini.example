@@ -1,0 +1,21 @@
+[app]
+app-server ansible_host=APP_SERVER_PUBLIC_IP
+
+[mariadb]
+mariadb-server ansible_host=MARIADB_PRIVATE_IP
+
+[rabbitmq]
+rabbitmq-server ansible_host=RABBITMQ_PRIVATE_IP
+
+[memcached]
+memcached-server ansible_host=MEMCACHED_PRIVATE_IP
+
+[backend:children]
+mariadb
+rabbitmq
+memcached
+
+[all:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/YOUR_KEY.pem
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
