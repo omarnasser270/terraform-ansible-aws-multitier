@@ -45,3 +45,24 @@
     host: "{{ ansible_default_ipv4.address }}"
     port: 3306
     timeout: 30
+
+- name: Copy the application SQL dump
+  ansible.builtin.copy:
+    src: "{{ lookup('env', 'HOME') }}/vprofile-project/src/main/resources/db_backup.sql"
+    dest: /tmp/db_backup.sql
+    mode: '0644'
+
+- name: Count tables already in the application database
+  ansible.builtin.command: >
+    mysql -N -B -e
+    "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='{{ db_name }}'"
+  register: db_tables
+  changed_when: false
+
+- name: Import the SQL dump only when the database is empty
+  community.mysql.mysql_db:
+    name: "{{ db_name }}"
+    state: import
+    target: /tmp/db_backup.sql
+    login_unix_socket: /run/mysqld/mysqld.sock
+  when: db_tables.stdout | int == 0

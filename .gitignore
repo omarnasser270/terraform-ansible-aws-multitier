@@ -1,5 +1,29 @@
+# Terraform
 .terraform/
 *.tfstate
 *.tfstate.*
 *.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ansible
+ansible/inventory.ini
+ansible/group_vars/all/vault.yml
+*.retry
+
+# SSH keys and credentials
 *.pem
+*.key
+*.pub
+.env
+.env.*
+!.env.example
+
+# Secrets
+secrets/
+credentials/

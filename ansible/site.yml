@@ -22,3 +22,9 @@
   become: true
   roles:
     - rabbitmq
+
+- name: Deploy the application
+  hosts: app
+  become: true
+  roles:
+    - app

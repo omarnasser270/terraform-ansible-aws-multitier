@@ -1,0 +1,27 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Stop tomcat for redeploy
+  ansible.builtin.systemd:
+    name: tomcat
+    state: stopped
+  listen: Redeploy application
+
+- name: Remove old exploded ROOT
+  ansible.builtin.file:
+    path: "{{ tomcat_home }}/webapps/ROOT"
+    state: absent
+  listen: Redeploy application
+
+- name: Start tomcat after redeploy
+  ansible.builtin.systemd:
+    name: tomcat
+    state: started
+  listen: Redeploy application
+
+- name: Reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded

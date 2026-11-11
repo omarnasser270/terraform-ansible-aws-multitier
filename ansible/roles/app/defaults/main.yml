@@ -1,0 +1,6 @@
+---
+tomcat_version: "10.1.28"
+tomcat_url: "https://archive.apache.org/dist/tomcat/tomcat-10/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz"
+tomcat_home: /opt/tomcat
+java_home: /usr/lib/jvm/java-17-openjdk-amd64
+vprofile_war_src: "{{ lookup('env', 'HOME') }}/vprofile-project/target/vprofile-v2.war"

@@ -1,0 +1,17 @@
+[Unit]
+Description=Apache Tomcat
+After=network.target
+
+[Service]
+Type=simple
+User=tomcat
+Group=tomcat
+Environment=JAVA_HOME={{ java_home }}
+Environment=CATALINA_HOME={{ tomcat_home }}
+Environment=CATALINA_BASE={{ tomcat_home }}
+Environment="CATALINA_OPTS=-Xms256m -Xmx512m"
+ExecStart={{ tomcat_home }}/bin/catalina.sh run
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
